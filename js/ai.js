@@ -7,6 +7,7 @@ function playAI(game) {
 	
 	var totalTime = timeEnd - timeStart;
 	
+	movesE1.html(movesEvaluated);
 	timeE1.html(totalTime + "ms");
 	
 	// Update the board position on screen and update game status at the bottom of the page

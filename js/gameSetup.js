@@ -4,6 +4,7 @@ var board,
 game = new Chess(),
 statusEl = $('#status'),
 timeE1 = $('#time'),
+movesE1 = $('#moves'),
 fenEl = $('#fen'),
 pgnEl = $('#pgn');
 

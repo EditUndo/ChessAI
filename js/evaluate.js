@@ -20,9 +20,8 @@ function bestMove(game) {
 		var testMove = possibleMoves[i];
 
 		game.move(testMove); // Make a move via the current move we are evaluating
-		movesEvaluated++;
 
-		var depth = 2;
+		var depth = 4;
 
 		//var testValue = optDig(depth,game,-10000,10000);
 		var testValue = digdeep(depth,game,true,-10000,10000);// Evaluate the board as a number value based on the move we just made to depth moves ahead
@@ -62,6 +61,8 @@ function bestMove(game) {
 //basically same as FreeCodeCamp
 function digdeep(depth, game, ismax, alpha, beta) {
 
+	movesEvaluated++;
+	
 	var pv = false;
 	
 	if (depth === 0) {
@@ -104,6 +105,8 @@ function digdeep(depth, game, ismax, alpha, beta) {
 //optimized Dig
 //negamax + alpha/beta + principle variation search
 function optDig(depth, game, alpha, beta) {
+	
+	movesEvaluated++;
 
 	var pv = false;
 
@@ -124,7 +127,7 @@ function optDig(depth, game, alpha, beta) {
 				{
 					val = - optDig(depth - 1, game,-alpha - 1,-alpha);
 
-					if((val > alpha) && (vall < beta)){ val = - optDig(depth - 1, game, - beta, - alpha ); }
+					if((val > alpha) && (val < beta)){ val = - optDig(depth - 1, game, - beta, - alpha ); }
 				}
 				else
 				{
