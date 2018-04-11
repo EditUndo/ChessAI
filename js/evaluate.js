@@ -6,7 +6,7 @@ function bestMove(game) {
 		alert("Game Over");
 	}
 
-	var possibleMoves = game.moves();
+	var possibleMoves = game.ugly_moves();
 	var bestMove;
 	var bestValue = -9999;
 	var values = ""; // For debugging
@@ -15,16 +15,12 @@ function bestMove(game) {
 
 	// For each move the AI can take, evaluate the board position after
 	for (var i = 0; i < possibleMoves.length; i++) {
-
-
 		var testMove = possibleMoves[i];
+		game.ugly_move(testMove); // Make a move via the current move we are evaluating
+		var depth = 2;
 
-		game.move(testMove); // Make a move via the current move we are evaluating
-
-		var depth = 4;
-
-		//var testValue = optDig(depth,game,-10000,10000);
-		var testValue = digdeep(depth,game,true,-10000,10000);// Evaluate the board as a number value based on the move we just made to depth moves ahead
+		var testValue = optDig(depth,game,-10000,10000);
+		//var testValue = digdeep(depth,game,true,-10000,10000);// Evaluate the board as a number value based on the move we just made to depth moves ahead
 		//var testValue = evaluateBoard(game); // Evaluate the board as a number value based on the move we just made
 
 		// If we can checkmate in one move, then that is the best possible move
@@ -69,13 +65,13 @@ function digdeep(depth, game, ismax, alpha, beta) {
         return evaluateBoard(game);
     }
 	
-	var possibleMoves = game.moves();
+	var possibleMoves = game.ugly_moves();
 
 
     if (ismax) {
         var bestMove = -9999;
         for (var i = 0; i < possibleMoves.length; i++) {
-            game.move(possibleMoves[i]);
+            game.ugly_move(possibleMoves[i]);
             bestMove = Math.max(bestMove, digdeep(depth - 1, game, !ismax,alpha,beta));
 						game.undo();
 
@@ -89,7 +85,7 @@ function digdeep(depth, game, ismax, alpha, beta) {
         var bestMove = 9999;
         for (var i = 0; i < possibleMoves.length; i++) {
 
-            game.move(possibleMoves[i]);
+            game.ugly_move(possibleMoves[i]);
             bestMove = Math.min(bestMove, digdeep(depth - 1, game, !ismax,alpha,beta));
             game.undo();
 
@@ -115,13 +111,13 @@ function optDig(depth, game, alpha, beta) {
         return evaluateBoard(game);
 	}
 	
-	var possibleMoves = game.moves();
+	var possibleMoves = game.ugly_moves();
 	var val = 0;
 
 	for (var i = 0; i < possibleMoves.length; i++)
 	{
 
-        game.move(possibleMoves[i]);
+        game.ugly_move(possibleMoves[i]);
 
 				if(pv)
 				{

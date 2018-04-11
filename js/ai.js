@@ -2,7 +2,7 @@ function playAI(game) {
 	var timeStart = new Date().getTime();
 	// Find the best move and play it
 	var move = bestMove(game);
-	game.move(move);
+	game.ugly_move(move);
 	var timeEnd = new Date().getTime();
 	
 	var totalTime = timeEnd - timeStart;

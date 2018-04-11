@@ -31,12 +31,54 @@ var onDrop = function(source, target) {
   updateStatus();
   playAI(game);
 };
-
-// update the board position after the piece snap 
-// for castling, en passant, pawn promotion
-var onSnapEnd = function() {
-  board.position(game.fen());
+var onSnapEnd = function () {
+    board.position(game.fen());
 };
+
+var onMouseoverSquare = function(square, piece) {
+    var moves = game.moves({
+        square: square,
+        verbose: true
+    });
+
+    if (moves.length === 0) return;
+
+    greySquare(square);
+
+    for (var i = 0; i < moves.length; i++) {
+        greySquare(moves[i].to);
+    }
+};
+
+var onMouseoutSquare = function(square, piece) {
+    removeGreySquares();
+};
+
+var removeGreySquares = function() {
+    $('#board .square-55d63').css('background', '');
+};
+
+var greySquare = function(square) {
+    var squareEl = $('#board .square-' + square);
+
+    var background = '#a9a9a9';
+    if (squareEl.hasClass('black-3c85d') === true) {
+        background = '#696969';
+    }
+
+    squareEl.css('background', background);
+};
+
+var cfg = {
+    draggable: true,
+    position: 'start',
+    onDragStart: onDragStart,
+    onDrop: onDrop,
+    onMouseoutSquare: onMouseoutSquare,
+    onMouseoverSquare: onMouseoverSquare,
+    onSnapEnd: onSnapEnd
+};
+board = ChessBoard('board', cfg);
 
 // Updates the status at the bottom of the page
 var updateStatus = function() {
@@ -72,14 +114,5 @@ var updateStatus = function() {
   pgnEl.html(game.pgn());
 };
 
-var cfg = {
-  draggable: true,
-  position: 'start',
-  onDragStart: onDragStart,
-  onDrop: onDrop,
-  onSnapEnd: onSnapEnd
-};
-
-board = ChessBoard('board', cfg);
 console.log("Current Value " + evaluateBoard(game));
 updateStatus();
