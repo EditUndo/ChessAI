@@ -180,7 +180,7 @@ function evaluatePiece(piece, x, y) {
 		throw "Unknown piece type: " + piece.type;
 	};
 
-	var absoluteValue = getAbsoluteValue(piece, piece.color === 'w', y ,x); // The y,x is intentional for now. It's how tutorial has it. Trying to figure out why. Plays bad either way
+	var absoluteValue = getAbsoluteValue(piece, piece.color === 'w', x ,y); // The y,x is intentional for now. It's how tutorial has it. Trying to figure out why. Plays bad either way
 	return piece.color === 'w' ? -absoluteValue : absoluteValue;
 }
 
