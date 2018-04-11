@@ -11,16 +11,17 @@ function bestMove(game) {
 	var bestValue = -9999;
 	var values = ""; // For debugging
 
-	console.log("Current Value " + evaluateBoard(game));
+	console.log("Current Value " + evaluateBoard(game.board()));
 
 	// For each move the AI can take, evaluate the board position after
 	for (var i = 0; i < possibleMoves.length; i++) {
 		var testMove = possibleMoves[i];
 		game.ugly_move(testMove); // Make a move via the current move we are evaluating
-		var depth = 2;
+		
+		var depth = parseInt($('#search-depth').find(':selected').text());
 
-		var testValue = optDig(depth,game,-10000,10000);
-		//var testValue = digdeep(depth,game,true,-10000,10000);// Evaluate the board as a number value based on the move we just made to depth moves ahead
+		var testValue = optDig(depth-1,game,-10000,10000);
+		//var testValue = digdeep(depth-1,game,true,-10000,10000);// Evaluate the board as a number value based on the move we just made to depth moves ahead
 		//var testValue = evaluateBoard(game); // Evaluate the board as a number value based on the move we just made
 
 		// If we can checkmate in one move, then that is the best possible move
@@ -62,7 +63,7 @@ function digdeep(depth, game, ismax, alpha, beta) {
 	var pv = false;
 	
 	if (depth === 0) {
-        return evaluateBoard(game);
+        return evaluateBoard(game.board());
     }
 	
 	var possibleMoves = game.ugly_moves();
@@ -73,11 +74,11 @@ function digdeep(depth, game, ismax, alpha, beta) {
         for (var i = 0; i < possibleMoves.length; i++) {
             game.ugly_move(possibleMoves[i]);
             bestMove = Math.max(bestMove, digdeep(depth - 1, game, !ismax,alpha,beta));
-						game.undo();
+			game.undo();
 
-						//update alpha and check
-						alpha = Math.max(alpha,bestMove);
-						if(beta <= alpha){return bestMove;}
+			//update alpha and check
+			alpha = Math.max(alpha,bestMove);
+			if(beta <= alpha){return bestMove;}
         }
         return bestMove;
 
@@ -89,9 +90,9 @@ function digdeep(depth, game, ismax, alpha, beta) {
             bestMove = Math.min(bestMove, digdeep(depth - 1, game, !ismax,alpha,beta));
             game.undo();
 
-						//update beta and check
-						beta = Math.min(beta, bestMove);
-						if(beta <= alpha) {return bestMove;}
+			//update beta and check
+			beta = Math.min(beta, bestMove);
+			if(beta <= alpha) {return bestMove;}
 
         }
         return bestMove;
@@ -108,7 +109,7 @@ function optDig(depth, game, alpha, beta) {
 
 	if (depth === 0)
 	{
-        return evaluateBoard(game);
+        return evaluateBoard(game.board());
 	}
 	
 	var possibleMoves = game.ugly_moves();
@@ -145,12 +146,11 @@ function optDig(depth, game, alpha, beta) {
 }
 
 // Iterate through the board and calculate a score for the positions of each piece
-function evaluateBoard(game) {
+function evaluateBoard(board) {
 	var score = 0;
 	for (var i = 0; i < 8; i++) {
 		for (var j = 0; j < 8; j++) {
-				var piece = game.board()[i][j]; // The board is represented as a 2D array
-				score = score + evaluatePiece(piece,i,j);
+				score = score + evaluatePiece(board[i][j],i,j);
 		}
 	}
 	return score;
@@ -158,8 +158,6 @@ function evaluateBoard(game) {
 
 // Evaluate the score of a specific piece on the board
 function evaluatePiece(piece, x, y) {
-
-	var score = 0;
 	
 	if (piece === null) {
 		return 0;
@@ -182,11 +180,8 @@ function evaluatePiece(piece, x, y) {
 		throw "Unknown piece type: " + piece.type;
 	};
 
-	var absoluteValue = getAbsoluteValue(piece, piece.color === 'w', x ,y);
-	score = piece.color === 'w' ? -absoluteValue : absoluteValue;
-			
-	return score;
-
+	var absoluteValue = getAbsoluteValue(piece, piece.color === 'w', y ,x); // The y,x is intentional for now. It's how tutorial has it. Trying to figure out why. Plays bad either way
+	return piece.color === 'w' ? -absoluteValue : absoluteValue;
 }
 
 // Reverse the array for black pieces because they are looking from the other side of the board (some pieces are the same no matter what, so don't reverse those)

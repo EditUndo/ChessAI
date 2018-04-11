@@ -25,11 +25,14 @@ var onDrop = function(source, target) {
 	to: target,
 	promotion: 'q' // NOTE: always promote to a queen for example simplicity
   });
+  
+    removeGreySquares();
 
   // illegal move
   if (move === null) return 'snapback';
   updateStatus();
-  playAI(game);
+  window.setTimeout(playAI(game), 250);
+  //playAI(game);
 };
 var onSnapEnd = function () {
     board.position(game.fen());
@@ -114,5 +117,5 @@ var updateStatus = function() {
   pgnEl.html(game.pgn());
 };
 
-console.log("Current Value " + evaluateBoard(game));
+console.log("Current Value " + evaluateBoard(game.board()));
 updateStatus();

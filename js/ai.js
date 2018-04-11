@@ -1,4 +1,8 @@
 function playAI(game) {
+	if (game.game_over()) {
+		alert("Game Over");
+		return;
+	}
 	var timeStart = new Date().getTime();
 	// Find the best move and play it
 	var move = bestMove(game);
