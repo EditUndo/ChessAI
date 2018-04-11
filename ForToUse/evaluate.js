@@ -60,10 +60,10 @@ function bestMove(game) {
 
 //minmax + alpha/beta search
 //basically same as FreeCodeCamp
-function digdeep(depth, game, ismax, alpha, beta) {
+function digdeep(depth, game, ismax,alpha,beta) {
 
 	var pv = false;
-	
+
 	if (depth === 0) {
         return evaluateBoard(game);
     }
@@ -87,7 +87,6 @@ function digdeep(depth, game, ismax, alpha, beta) {
     } else {
         var bestMove = 9999;
         for (var i = 0; i < possibleMoves.length; i++) {
-
             game.move(possibleMoves[i]);
             bestMove = Math.min(bestMove, digdeep(depth - 1, game, !ismax,alpha,beta));
             game.undo();
@@ -103,9 +102,11 @@ function digdeep(depth, game, ismax, alpha, beta) {
 
 //optimized Dig
 //negamax + alpha/beta + principle variation search
-function optDig(depth, game, alpha, beta) {
+function optDig(depth, game,alpha,beta) {
 
 	var pv = false;
+	var bestMove = -9999;
+	var val = 0;
 
 	if (depth === 0)
 	{
@@ -113,7 +114,6 @@ function optDig(depth, game, alpha, beta) {
 	}
 	
 	var possibleMoves = game.moves();
-	var val = 0;
 
 	for (var i = 0; i < possibleMoves.length; i++)
 	{
@@ -124,7 +124,7 @@ function optDig(depth, game, alpha, beta) {
 				{
 					val = - optDig(depth - 1, game,-alpha - 1,-alpha);
 
-					if((val > alpha) && (vall < beta)){ val = - optDig(depth - 1, game, - beta, - alpha ); }
+					if((val > alpha) && (val < beta)){ val = - optDig(depth - 1, game, - beta, - alpha ); }
 				}
 				else
 				{
@@ -142,7 +142,7 @@ function optDig(depth, game, alpha, beta) {
 						//One of the moves will be greater than alpha but none will be bigger than or equal to beta
 				}
     }
-        return alpha;
+        return bestMove;
 }
 
 // Iterate through the board and calculate a score for the positions of each piece
