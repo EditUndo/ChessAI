@@ -109,7 +109,7 @@ function optDig(depth, game,alpha,beta) {
   }
 
 	var possibleMoves = game.moves();
-  var bestMove = -9999;
+
 	var val = 0;
 
 	for (var i = 0; i < possibleMoves.length; i++)
@@ -139,7 +139,7 @@ function optDig(depth, game,alpha,beta) {
 						//One of the moves will be greater than alpha but none will be bigger than or equal to beta
 				}
     }
-        return bestMove;
+        return alpha;
 }
 
 function evaluateBoard(game) {
