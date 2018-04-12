@@ -20,8 +20,8 @@ function bestMove(game) {
 		
 		var depth = parseInt($('#search-depth').find(':selected').text());
 
-		var testValue = optDig(depth-1,game,-10000,10000);
-		//var testValue = digdeep(depth-1,game,true,-10000,10000);// Evaluate the board as a number value based on the move we just made to depth moves ahead
+		//var testValue = optDig(depth-1,game,-10000,10000);
+		var testValue = digdeep(depth-1,game,false,-10000,10000);// Evaluate the board as a number value based on the move we just made to depth moves ahead
 		//var testValue = evaluateBoard(game); // Evaluate the board as a number value based on the move we just made
 
 		// If we can checkmate in one move, then that is the best possible move
@@ -165,22 +165,22 @@ function evaluatePiece(piece, x, y) {
 	
 	var getAbsoluteValue = function (piece, isWhite, x ,y) {
 		if (piece.type === 'p') {
-			return 10 + ( isWhite ? pawnEvalWhite[x][y] : pawnEvalBlack[x][y] );
+			return 10 + ( isWhite ? pawnEvalWhite[y][x] : pawnEvalBlack[y][x] );
 		} else if (piece.type === 'r') {
-			return 50 + ( isWhite ? rookEvalWhite[x][y] : rookEvalBlack[x][y] );
+			return 50 + ( isWhite ? rookEvalWhite[y][x] : rookEvalBlack[y][x] );
 		} else if (piece.type === 'n') {
 			return 30 + knightEval[y][x];
 		} else if (piece.type === 'b') {
-			return 30 + ( isWhite ? bishopEvalWhite[x][y] : bishopEvalBlack[x][y] );
+			return 30 + ( isWhite ? bishopEvalWhite[y][x] : bishopEvalBlack[y][x] );
 		} else if (piece.type === 'q') {
 			return 90 + queenEval[y][x];
 		} else if (piece.type === 'k') {
-			return 900 + ( isWhite ? kingEvalWhite[x][y] : kingEvalBlack[x][y] );
+			return 900 + ( isWhite ? kingEvalWhite[y][x] : kingEvalBlack[y][x] );
 		}
 		throw "Unknown piece type: " + piece.type;
 	};
 
-	var absoluteValue = getAbsoluteValue(piece, piece.color === 'w', x ,y); // The y,x is intentional for now. It's how tutorial has it. Trying to figure out why. Plays bad either way
+	var absoluteValue = getAbsoluteValue(piece, piece.color === 'w', x ,y);
 	return piece.color === 'w' ? -absoluteValue : absoluteValue;
 }
 
