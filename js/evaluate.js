@@ -17,7 +17,7 @@ function bestMove(game) {
 	for (var i = 0; i < possibleMoves.length; i++) {
 		var testMove = possibleMoves[i];
 		game.ugly_move(testMove); // Make a move via the current move we are evaluating
-		
+
 		var depth = parseInt($('#search-depth').find(':selected').text());
 
 		//var testValue = optDig(depth-1,game,-10000,10000);
@@ -59,13 +59,13 @@ function bestMove(game) {
 function digdeep(depth, game, ismax, alpha, beta) {
 
 	movesEvaluated++;
-	
+
 	var pv = false;
-	
+
 	if (depth === 0) {
         return evaluateBoard(game.board());
     }
-	
+
 	var possibleMoves = game.ugly_moves();
 
 
@@ -99,37 +99,50 @@ function digdeep(depth, game, ismax, alpha, beta) {
 }
 }
 
+
+
 //optimized Dig
 //negamax + alpha/beta + principle variation search
-function optDig(depth, game, alpha, beta) {
-	
-	movesEvaluated++;
+function saveMove(cmove,argmove,lastmove){
+	this.cmove = cmove;
+	this.argmove = argmove;
+	//this.lastmove = lastmove;
+}
+//prepping for iterative deep
+function optDig(depth, game, alpha, beta, savedMove) {
 
-	var pv = false;
+	movesEvaluated++;
+	var newMove = new saveMove(0,[]);
 
 	if (depth === 0)
 	{
+				savedMove.cmove = 0;
         return evaluateBoard(game.board());
 	}
-	
+
 	var possibleMoves = game.ugly_moves();
+
 	var val = 0;
 
 	for (var i = 0; i < possibleMoves.length; i++)
 	{
 
-        game.ugly_move(possibleMoves[i]);
 
+        game.ugly_move(possibleMoves[i]);
+				/* legacy pv
 				if(pv)
 				{
-					val = - optDig(depth - 1, game,-alpha - 1,-alpha);
+					val = - optDig(depth - 1, game,-alpha - 1,-alpha,newMove);
 
-					if((val > alpha) && (val < beta)){ val = - optDig(depth - 1, game, - beta, - alpha ); }
+					if((val > alpha) && (val < beta)){ val = - optDig(depth - 1, game, - beta, - alpha, newMove ); }
 				}
 				else
 				{
-					val = - optDig(depth - 1, game, - beta, - alpha );
+					val = - optDig(depth - 1, game, - beta, - alpha, newMove );
 				}
+				*/
+
+				val = - optDig(depth - 1, game, - beta, - alpha, newMove );
 
 				game.undo();
 
@@ -138,8 +151,12 @@ function optDig(depth, game, alpha, beta) {
 				if(val >= alpha)
 				{
 						alpha = val;
-						pv = true; //principle variation flag set to true
-						//One of the moves will be greater than alpha but none will be bigger than or equal to beta
+
+						//don't now if this works but creating chain of moves to pv move
+						savedMove.argmove = [possibleMoves[i]];
+						savedMove.push.apply(newMove.argmove);
+						savedMove.cmove = newMove.cmove + 1;
+
 				}
     }
         return alpha;
@@ -158,11 +175,11 @@ function evaluateBoard(board) {
 
 // Evaluate the score of a specific piece on the board
 function evaluatePiece(piece, x, y) {
-	
+
 	if (piece === null) {
 		return 0;
 	}
-	
+
 	var getAbsoluteValue = function (piece, isWhite, x ,y) {
 		if (piece.type === 'p') {
 			return 10 + ( isWhite ? pawnEvalWhite[y][x] : pawnEvalBlack[y][x] );
