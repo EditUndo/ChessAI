@@ -116,7 +116,7 @@ function optDig(depth, game, alpha, beta, savedMove) {
 
 	if (depth === 0)
 	{
-				savedMove.cmove = 0;
+		savedMove.cmove = 0;
         return evaluateBoard(game.board());
 	}
 
@@ -182,17 +182,17 @@ function evaluatePiece(piece, x, y) {
 
 	var getAbsoluteValue = function (piece, isWhite, x ,y) {
 		if (piece.type === 'p') {
-			return 10 + ( isWhite ? pawnEvalWhite[y][x] : pawnEvalBlack[y][x] );
+			return 10 + ( isWhite ? pawnEvalWhite[x][y] : pawnEvalBlack[x][y] );
 		} else if (piece.type === 'r') {
-			return 50 + ( isWhite ? rookEvalWhite[y][x] : rookEvalBlack[y][x] );
+			return 50 + ( isWhite ? rookEvalWhite[x][y] : rookEvalBlack[x][y] );
 		} else if (piece.type === 'n') {
-			return 30 + knightEval[y][x];
+			return 30 + knightEval[x][y];
 		} else if (piece.type === 'b') {
-			return 30 + ( isWhite ? bishopEvalWhite[y][x] : bishopEvalBlack[y][x] );
+			return 30 + ( isWhite ? bishopEvalWhite[x][y] : bishopEvalBlack[x][y] );
 		} else if (piece.type === 'q') {
-			return 90 + queenEval[y][x];
+			return 90 + queenEval[x][y];
 		} else if (piece.type === 'k') {
-			return 900 + ( isWhite ? kingEvalWhite[y][x] : kingEvalBlack[y][x] );
+			return 900 + ( isWhite ? kingEvalWhite[x][y] : kingEvalBlack[x][y] );
 		}
 		throw "Unknown piece type: " + piece.type;
 	};
